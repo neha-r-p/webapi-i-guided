@@ -6,6 +6,7 @@ const Hubs = require("./data/hubs-model"); //will use Hubs to get access to the 
 //Hubs has find(), findById(), add(), remove(), update() methods
 
 const server = express();
+server.use(express.json()); // <<<<<<<<< add this line  to teach express to parse JSON
 
 //handle HTTP GET requests to the / URL
 server.get("/", (req, res) => {
@@ -13,7 +14,7 @@ server.get("/", (req, res) => {
 });
 
 //see a list of Hubs (similar to a channel on slack) /hubs
-server.get("/hubs", (req, res) => {
+server.get('/hubs', (req, res) => {
   //Hubs.find() returns a promise, we need the bros [].then().catch()
   Hubs.find()
     .then(hubs => {
@@ -27,11 +28,13 @@ server.get("/hubs", (req, res) => {
 });
 
 //create a Hub
-server.post("/hubs", (req, res) => {
-  const hubInformation = 
+server.post('/hubs', (req, res) => {
+  // http message is an object with headers and body like { headers: {}, body: {//data sent by client} }
+  const hubInformation = req.body;
+  console.log('hub info from body', hubInformation)
   Hubs.add(hubInformation)
-    .then(result => {
-
+    .then(hub => {
+      res.status(201).json(hub)
     })
     .catch(err => {
       res.status(500).json({message: 'error adding the hub'});
