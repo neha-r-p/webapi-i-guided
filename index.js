@@ -43,19 +43,35 @@ server.post("/hubs", (req, res) => {
 });
 
 //delete a Hub call /hubs/6
-server.delete('/hubs/:id', (req, res) => {
-  const hubId = req.params.id
+server.delete("/hubs/:id", (req, res) => {
+  const hubId = req.params.id;
 
   Hubs.remove(hubId)
-  .then(hub => {
-    res.status(200).json({ message: 'hub deleted successfully'})
-  })
-  .catch(err => {
-    res.status(500).json({ message: 'error removing the hub'})
-  })
-})
+    .then(hub => {
+      res.status(200).json({ message: "hub deleted successfully" });
+    })
+    .catch(err => {
+      res.status(500).json({ message: "error removing the hub" });
+    });
+});
 
 //update a Hub
+server.put("/hubs/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
+  Hubs.update(id, changes)
+    .then(updated => {
+      if (updated) {
+        res.status(200).json(updated)
+      } else {
+        res.status(404).json({ message: "hub not found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "error updating hub" });
+    });
+});
 
 const port = 7000;
 server.listen(port, () => console.log("\napi running\n")); //usually last line in file
