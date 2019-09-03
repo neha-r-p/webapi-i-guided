@@ -6,7 +6,7 @@ const Hubs = require("./data/hubs-model"); //will use Hubs to get access to the 
 //Hubs has find(), findById(), add(), remove(), update() methods
 
 const server = express();
-server.use(express.json()); // <<<<<<<<< add this line  to teach express to parse JSON
+server.use(express.json()); // <<<<<<<<< add this line to teach express to parse JSON
 
 //handle HTTP GET requests to the / URL
 server.get("/", (req, res) => {
@@ -14,7 +14,7 @@ server.get("/", (req, res) => {
 });
 
 //see a list of Hubs (similar to a channel on slack) /hubs
-server.get('/hubs', (req, res) => {
+server.get("/hubs", (req, res) => {
   //Hubs.find() returns a promise, we need the bros [].then().catch()
   Hubs.find()
     .then(hubs => {
@@ -28,20 +28,32 @@ server.get('/hubs', (req, res) => {
 });
 
 //create a Hub
-server.post('/hubs', (req, res) => {
+server.post("/hubs", (req, res) => {
   // http message is an object with headers and body like { headers: {}, body: {//data sent by client} }
   const hubInformation = req.body;
-  console.log('hub info from body', hubInformation)
+  console.log("hub info from body", hubInformation);
+
   Hubs.add(hubInformation)
     .then(hub => {
-      res.status(201).json(hub)
+      res.status(201).json(hub);
     })
     .catch(err => {
-      res.status(500).json({message: 'error adding the hub'});
+      res.status(500).json({ message: "error adding the hub" });
     });
 });
 
-//delete a Hub
+//delete a Hub call /hubs/6
+server.delete('/hubs/:id', (req, res) => {
+  const hubId = req.params.id
+
+  Hubs.remove(hubId)
+  .then(hub => {
+    res.status(200).json({ message: 'hub deleted successfully'})
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'error removing the hub'})
+  })
+})
 
 //update a Hub
 
