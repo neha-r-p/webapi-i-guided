@@ -14,19 +14,29 @@ server.get("/", (req, res) => {
 
 //see a list of Hubs (similar to a channel on slack) /hubs
 server.get("/hubs", (req, res) => {
-    //Hubs.find() returns a promise, we need the bros [].then().catch()
+  //Hubs.find() returns a promise, we need the bros [].then().catch()
   Hubs.find()
     .then(hubs => {
-        // .json will convert (or try) the data passed to JSON before sending
-        // also tells the client we're sending JSON through an HTTP header
-        res.status(200).json(hubs);
+      // .json will convert (or try) the data passed to JSON before sending
+      // also tells the client we're sending JSON through an HTTP header
+      res.status(200).json(hubs);
     })
     .catch(err => {
-        res.status(500).json({message: 'error getting the list of humbs'})
+      res.status(500).json({ message: "error getting the list of hubs" });
     });
 });
 
 //create a Hub
+server.post("/hubs", (req, res) => {
+  const hubInformation = 
+  Hubs.add(hubInformation)
+    .then(result => {
+
+    })
+    .catch(err => {
+      res.status(500).json({message: 'error adding the hub'});
+    });
+});
 
 //delete a Hub
 
